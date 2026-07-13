@@ -1,0 +1,19 @@
+! Remap Caps to Ctrl
+!
+! Clear the modifier maps that are being remapped
+clear lock
+clear control
+
+! 66 -> Caps_Lock
+! Bind Caps_Lock to:
+!   Control_L when no modifier key is used,
+!   NoSymbol when Shift is used,
+!   Caps_Lock when the Mode_switch key is used
+keycode 66 = Control_L NoSymbol Caps_Lock
+
+! 151 -> Fn
+! Fn + Caps_Lock allows normal Caps_Lock functionality
+keycode 151 = Mode_switch
+
+! Add Control_L back to the modifier map
+add control = Control_L
