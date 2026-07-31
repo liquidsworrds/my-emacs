@@ -9,6 +9,13 @@
 (column-number-mode 1)
 (global-subword-mode 1)
 
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
+
+;; Window Split
+(setq split-height-threshold nil) ;; prefer vertical splits
+(setq split-width-threshold 80)
+
 (recentf-mode 1)
 (save-place-mode 1)
 
@@ -47,7 +54,7 @@
 (global-auto-revert-mode 1)
 
 (setq inhibit-startup-message t)
-(setq inhibit-startup-screen t)
+(setq inhibit-startup-screen nil)
 
 (defun my/reset-variable(symbl)
   "Reset symbl to its standard value."
@@ -125,25 +132,27 @@
 (use-package evil-collection
   :ensure t
   :after evil
-  :diminish
   :init
   (evil-collection-init))
 
 ;; Themes
+;; (add-hook 'emacs-startup-hook
+;;           (lambda() (load-theme 'ef-maris-dark t)))
+
+(load-theme 'ef-maris-dark t)
 (use-package ef-themes
   :ensure t
   :custom
   (modus-themes-to-toggle '(ef-dark ef-light)))
 
-(use-package tokyo-night
-  :ensure t
-  :config
-  (load-theme 'tokyo-night t))
+;; (use-package tokyo-night
+;;   :ensure t)
 
 (global-set-key (kbd "<f5>") 'ef-themes-toggle)
 
 (use-package mood-line
   :ensure t
+  :defer t
   :custom
   (mood-line-glyph-alist mood-line-glyphs-fira-code)
   (setq mood-line-glyph-alist mood-line-glyphs-unicode)
@@ -153,6 +162,7 @@
 ;; LSP
 (use-package lsp-mode
   :ensure t
+  :defer t
   :init
   (setq lsp-keymap-prefix "C-c l")
   (setq lsp-diagnostics-provider :flycheck)
@@ -169,9 +179,10 @@
 
 (use-package lsp-ui
   :ensure t
+  :defer t
   :custom
   (lsp-ui-sideline-enable t)
-  (lsp-ui-sideline-show-diagnostics nil)
+  (lsp-ui-sideline-show-diagnostics t)
   (lsp-ui-sideline-delay 1)
   (lsp-ui-sideline-update-mode 'line)
   :after lsp-mode)
@@ -199,38 +210,27 @@
 
 (use-package flycheck
   :ensure t
+  :defer t
   :after lsp-mode
   :custom
-  (flycheck-display-errors-delay 2))
+  (flycheck-display-errors-delay 0.9))
 
 (use-package which-key
   :ensure t
-  :diminish
+  :defer 2
   :custom
   (which-key-idle-delay 2)
   :config
   (which-key-mode))
 
-;; Completions
-
-;; (use-package company
-;;   :ensure t
-;;   :diminish
-;;   :custom
-;;   (company-idle-delay 0)
-;;   (company-tooltip-flip-when-above t)
-;;   (company-show-quick-access t)
-;;   (add-to-list 'company-backends 'company-yasnippet)
-;;   :hook
-;;   (after-init-hook . company-tng-mode)
-;;   (after-init-hook . global-company-mode))
-
 (use-package nerd-icons-corfu
   :ensure t
+  :defer t
   :after corfu)
 
 (use-package corfu
   :ensure t
+  :defer t
   :custom
   (corfu-auto t)
   (corfu-cycle t)
@@ -254,9 +254,10 @@
   :config
   ;;(setq corfu-popupinfo-delay '(1.25 . 0.5))
   :hook
-  (prog-mode-hook . corfu-mode)
-  (shell-mode     . corfu-mode)
-  (eshell-mode    . corfu-mode))
+  (after-init  . corfu-mode)
+  (prog-mode   . corfu-mode)
+  (shell-mode  . corfu-mode)
+  (eshell-mode . corfu-mode))
 
 (use-package cape
   :ensure t
@@ -267,7 +268,6 @@
 
 (use-package yasnippet
   :ensure t
-  :diminish
   :config
   (yas-reload-all)
   :hook
@@ -323,6 +323,7 @@
 
 (use-package magit
   :ensure t
+  :defer t
   :commands magit-status)
 
 (use-package vterm
@@ -384,31 +385,31 @@
   :hook
   (dired-mode . nerd-icons-dired-mode))
 
-(use-package dashboard
-  :ensure t
-  :custom
-  (dashboard-items nil)
-  (dashboard-hide-cursor t)
-  (dashboard-center-content t)
-  (dashboard-footer-messages nil)
-  (dashboard-vertically-center-content nil)
-  (dashboard-startup-banner "/usr/share/emacs/30.2/etc/images/splash.svg")
-  ;; (dashboard-startup-banner 'official)
-  (dashboard-startupify-list
-   '(dashboard-insert-banner
-     dashboard-insert-newline
-     dashboard-insert-banner-title
-     dashboard-insert-newline
-     dashboard-insert-init-info))
-  :config
-  (dashboard-setup-startup-hook))
+;; (use-package dashboard
+;;   :ensure t
+;;   :custom
+;;   (dashboard-items nil)
+;;   (dashboard-hide-cursor t)
+;;   (dashboard-center-content t)
+;;   (dashboard-footer-messages nil)
+;;   (dashboard-vertically-center-content nil)
+;;   (dashboard-startup-banner "/usr/share/emacs/30.2/etc/images/splash.svg")
+;;   ;; (dashboard-startup-banner 'official)
+;;   (dashboard-startupify-list
+;;    '(dashboard-insert-banner
+;;      dashboard-insert-newline
+;;      dashboard-insert-banner-title
+;;      dashboard-insert-newline
+;;      dashboard-insert-init-info))
+;;   :config
+;;   (dashboard-setup-startup-hook))
 
 ;; Prettify 
-(use-package diminish
-  :ensure t
-  :config
-  (diminish 'evil-collection-unimpaired-mode)
-  (diminish 'yas-minor-mode))
+;; (use-package diminish
+;;   :ensure t
+;;   :config
+;;   (diminish 'evil-collection-unimpaired-mode)
+;;   (diminish 'yas-minor-mode))
 
 (use-package rainbow-mode
   :ensure t
@@ -419,9 +420,10 @@
   :ensure t
   :hook (emacs-lisp-mode . rainbow-delimiters-mode))
 
-(use-package beacon
-  :ensure t
-  :config (beacon-mode))
+;; (use-package beacon
+;;   :ensure t
+;;   :defer t
+;;   :config (beacon-mode))
 
 (use-package treesit-auto
   :ensure t
@@ -576,7 +578,8 @@
 
 (use-package project
   :custom
-  (project-kill-buffers-display-buffer-list t))
+  (project-kill-buffers-display-buffer-list t)
+  (project-mode-line t))
 
 ;; (use-package projectile
 ;;   :ensure t
@@ -588,3 +591,5 @@
 ;;   (when (file-directory-p "~/proj/")
 ;;     (setq projectile-project-search-path '("~/proj/")))
 ;;   (setq projectile-switch-project-action #'projectile-dired))
+
+(message "Startup: %s"(emacs-init-time))
