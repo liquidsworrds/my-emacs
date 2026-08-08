@@ -40,6 +40,16 @@
 
 (add-hook 'prog-mode-hook 'my/set-line-numbers)
 
+;; C settings
+(setq c-basic-style "stroustrup")
+(setq c-basic-indent 4)
+(setq c-basic-offset 4)
+
+;; Debugging
+(setq gdb-enable-debug t)
+(setq gdb-many-windows t)
+(setq gdb-show-main t)
+
 ;; Color Column
 (setq-default fill-colum 80)
 (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
@@ -139,7 +149,7 @@
 ;; (add-hook 'emacs-startup-hook
 ;;           (lambda() (load-theme 'ef-maris-dark t)))
 
-(load-theme 'ef-maris-dark t)
+(load-theme 'modus-vivendi t)
 (use-package ef-themes
   :ensure t
   :custom
@@ -187,7 +197,7 @@
   (lsp-ui-sideline-update-mode 'line)
   :after lsp-mode)
 
-;; Godot 
+;; Godot
 (use-package gdscript-mode
   :ensure t
   :mode "\\.gd\\'")
@@ -261,7 +271,7 @@
 
 (use-package cape
   :ensure t
-  :defer 
+  :defer
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
@@ -404,7 +414,7 @@
 ;;   :config
 ;;   (dashboard-setup-startup-hook))
 
-;; Prettify 
+;; Prettify
 ;; (use-package diminish
 ;;   :ensure t
 ;;   :config
@@ -531,7 +541,7 @@
    '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch)))))))
-  
+
 (use-package org
   :ensure nil
   :hook
@@ -591,5 +601,10 @@
 ;;   (when (file-directory-p "~/proj/")
 ;;     (setq projectile-project-search-path '("~/proj/")))
 ;;   (setq projectile-switch-project-action #'projectile-dired))
+
+(use-package ace-window
+  :ensure t
+  :bind
+  ("M-o" . ace-window))
 
 (message "Startup: %s"(emacs-init-time))
