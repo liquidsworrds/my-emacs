@@ -110,11 +110,12 @@
 
 ;; Compile
 (setq compilation-scroll-output 'first-error)
+(add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
 (global-set-key (kbd "<f9>") 'recompile)
-(setq compilation-finish-functions
-      (list (lambda (buf status)
-              (when (string-match-p "finished" status)
-                (run-at-time 1 nil #'delete-windows-on buf)))))
+;; (setq compilation-finish-functions
+;;       (list (lambda (buf status)
+;;               (when (string-match-p "finished" status)
+;;                 (run-at-time 1 nil #'delete-windows-on buf)))))
 
 (defun display-startup-echo-area-message ()
   "Don't display \"For more information about GNU Emacs and the GNU system, type C-h C-a\" message in the minibuffer during startup"
