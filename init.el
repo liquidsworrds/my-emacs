@@ -43,9 +43,12 @@
 (add-hook 'prog-mode-hook 'my/set-line-numbers)
 
 ;; C settings
-(setq c-basic-style "stroustrup")
-(setq c-basic-indent 4)
 (setq c-basic-offset 4)
+(setq c-default-style '((java-mode . "java")
+                        (awk-mode . "awk")
+                        (other . "bsd")))
+(setq c-ts-indent-offset 4)
+(setq c-ts-mode-indent-style 'bsd)
 
 ;; Debugging
 (setq gdb-enable-debug t)
