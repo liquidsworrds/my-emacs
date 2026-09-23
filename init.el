@@ -1,20 +1,22 @@
 ;;; init.el --- Emacs config -*- lexical-binding: t -*-
 
-(fringe-mode nil)
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (show-paren-mode 1)
 (scroll-bar-mode 0)
 (blink-cursor-mode 0)
 (column-number-mode 1)
-(global-subword-mode 1)
+(global-subword-mode 0)
+
+;; fringe length -> (LEFT . RIGHT)
+(set-fringe-mode '(0 . 0))
 
 (add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'text-mode-hook #'hl-line-mode)
+;(add-hook 'text-mode-hook #'hl-line-mode)
 
 ;; Window Split
-(setq split-height-threshold nil) ;; prefer vertical splits
-(setq split-width-threshold 80)
+(setq split-height-threshold 0) ;; prefer vertical splits
+(setq split-width-threshold 150)
 
 (recentf-mode 1)
 (save-place-mode 1)
@@ -51,7 +53,7 @@
 (setq gdb-show-main t)
 
 ;; Color Column
-(setq-default fill-colum 80)
+(setq-default fill-column 80)
 (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 
 ;; Text Wrapping
@@ -88,7 +90,7 @@
 (add-hook 'calendar-today-visible-hook 'calendar-mark-today)
 (add-hook 'calendar-today-visible-hook 'calendar-mark-holidays)
 
-(modify-all-frames-parameters '((right-divider-width . 6)))
+(modify-all-frames-parameters '((right-divider-width . 4)))
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
@@ -161,14 +163,14 @@
 
 (global-set-key (kbd "<f5>") 'ef-themes-toggle)
 
-(use-package mood-line
-  :ensure t
-  :defer t
-  :custom
-  (mood-line-glyph-alist mood-line-glyphs-fira-code)
-  (setq mood-line-glyph-alist mood-line-glyphs-unicode)
-  :init
-  (mood-line-mode))
+;; (use-package mood-line
+;;   :ensure t
+;;   :defer t
+;;   :custom
+;;   (setq mood-line-glyph-alist mood-line-glyphs-fira-code)
+;;   (setq mood-line-glyph-alist mood-line-glyphs-unicode))
+  ;; :init
+  ;; (mood-line-mode))
 
 ;; LSP
 (use-package lsp-mode
@@ -201,7 +203,9 @@
 ;; Godot
 (use-package gdscript-mode
   :ensure t
-  :mode "\\.gd\\'")
+  :mode "\\.gd\\'"
+  :custom
+  (setq gdscript-gdformat-save-and-format nil))
 
 (add-to-list 'major-mode-remap-alist
              '(gdscript-mode . gdscript-ts-mode))
@@ -308,7 +312,7 @@
 (use-package consult
   :ensure t
   :bind
-  ("C-x b" . consult-buffer)
+  ;; ("C-x b" . consult-buffer)
   ("M-s g" . consult-grep)
   ("M-s f" . consult-find)
   ("M-s l" . consult-line))
@@ -424,8 +428,7 @@
 
 (use-package rainbow-mode
   :ensure t
-  :diminish
-  :hook (prog-mode-hook . rainbow-mode))
+  :diminish)
 
 (use-package rainbow-delimiters
   :ensure t
